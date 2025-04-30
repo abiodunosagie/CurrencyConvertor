@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct Rates: Decodable {
+struct Rates: Decodable, Encodable {
     let rates: [String: Double]
 }

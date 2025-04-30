@@ -24,12 +24,12 @@ struct ContentView: View {
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                     VStack(alignment: .leading, spacing: 4) {
-                         Text("Welcome back 👋")
-                             .font(.headline)
-                         Text("Let’s convert some money today!")
-                             .font(.subheadline)
-                             .foregroundColor(.gray)
-                     }
+                        Text("Welcome back 👋")
+                            .font(.headline)
+                        Text("Let’s convert some money today!")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
                     Spacer()
                 }
                 .padding(.top)
@@ -50,12 +50,13 @@ struct ContentView: View {
                         baseAmountIsFocused = false
                         convertedAmountIsFocused = false
                     }
-                    .onChange(of: amount, perform: { newValue in
-                        if let number = viewModel.numberFormatter.number(from: amount) {
+                    .onChange(of: amount) { oldValue, newValue in
+                        if let number = viewModel.numberFormatter.number(from: newValue) {
                             viewModel.baseAmount = number.doubleValue
                             viewModel.convert()
                         }
-                    })
+                    }
+
                     .font(.system(size: 18, weight: .semibold))
                     .padding()
                     .overlay {
@@ -143,12 +144,12 @@ struct ContentView: View {
                     
                     HStack {
                         Spacer()
-                        Text(
-                            "1.000000 \(viewModel.baseCurrency.rawValue) = \(viewModel.conversionRate) \(viewModel.convertedCurrency.rawValue)"
-                        )
+                        Text("1000.00 \(viewModel.baseCurrency.rawValue) = \(viewModel.convertedAmount, specifier: "%.2f") \(viewModel.convertedCurrency.rawValue)")
+
                         .font(.system(size: 18, weight: .semibold))
                         .padding(.top)
                         Spacer()
+                        
                     }
                     
                     // MARK: - ERROR MESSAGE
@@ -175,6 +176,25 @@ struct ContentView: View {
                         .padding(.horizontal)
                     }
                 }
+                .padding(.bottom, 10)
+                Button {
+                    Task {
+                        await viewModel.fetchHistoricalRates()
+                        viewModel.showingHistoricalChart = true
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                        Text("View Historical Trends")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    
+                }
+                .padding(.top, 10)
                 Spacer()
             } //: VSTACK
             .padding(.horizontal)
@@ -190,7 +210,7 @@ struct ContentView: View {
                         .tint(.white)
                 }
             }
-        }
+        } //: ZSTACK
         .onTapGesture {
             viewModel.convert()
             baseAmountIsFocused = false
@@ -200,6 +220,27 @@ struct ContentView: View {
                 viewModel.convert()
             }
         }
+        .sheet(isPresented: $viewModel.showingHistoricalChart) {
+            VStack {
+                Picker("Timeframe", selection: $viewModel.historyTimeframe) {
+                    ForEach(HistoryTimeframe.allCases) { timeframe in
+                        Text(timeframe.rawValue.capitalized)
+                            .tag(timeframe)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding()
+
+                CurrencyChartView(
+                    historicalData: viewModel.historicalData,
+                    baseCurrency: viewModel.baseCurrency,
+                    targetCurrency: viewModel.convertedCurrency,
+                    timeFrame: viewModel.historyTimeframe,
+                    isPresented: $viewModel.showingHistoricalChart
+                )
+            }
+        }
+
     }
 }
 
