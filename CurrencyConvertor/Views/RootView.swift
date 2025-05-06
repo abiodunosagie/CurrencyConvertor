@@ -12,9 +12,9 @@ struct RootView: View {
 
     var body: some View {
         if hasSeenOnboarding {
-            ContentView(hasSeenOnboarding: $hasSeenOnboarding)
+            ContentView()
         } else {
-            MainOnboardView(hasSeenOnboarding: $hasSeenOnboarding)
+            MainOnboardView()
         }
     }
 }

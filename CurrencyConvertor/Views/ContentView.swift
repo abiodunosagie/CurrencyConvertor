@@ -241,7 +241,7 @@ struct ContentView: View {
                         }
                         Spacer()
                         Button("Sign Out") {
-                            hasSeenOnboarding = false
+                          
                         }
                         .font(.footnote)
                     }
@@ -254,6 +254,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(hasSeenOnboarding: .constant(true))
+    ContentView()
 }
 
