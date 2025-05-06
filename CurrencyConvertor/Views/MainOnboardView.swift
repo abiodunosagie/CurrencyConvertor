@@ -12,8 +12,6 @@ struct MainOnboardView: View {
     // MARK: - PROPERTIES
     @State private var currentPage = 0
     @State private var navigateToHome = false
-  //  @AppStorage("hasSeenOnboarding") var hasSeenOnboarding = false
-    @Binding var hasSeenOnboarding: Bool
     
     // MARK: - BODY
     var body: some View {
@@ -49,7 +47,6 @@ struct MainOnboardView: View {
                 // Continue Button
                 if currentPage == 2 {
                     Button(action: {
-                        hasSeenOnboarding = true
                         navigateToHome = true
                     }) {
                         Text("Continue")
@@ -65,14 +62,6 @@ struct MainOnboardView: View {
                     .animation(.easeInOut, value: currentPage)
                 }
 
-                NavigationLink(
-                    destination: ContentView(
-                        hasSeenOnboarding: .constant(true)
-                    ),
-                    isActive: $navigateToHome
-                ) {
-                    EmptyView()
-                }
             }
         }
     }
@@ -80,5 +69,5 @@ struct MainOnboardView: View {
 
 
 #Preview {
-    MainOnboardView(hasSeenOnboarding: .constant(false))
+    MainOnboardView()
 }

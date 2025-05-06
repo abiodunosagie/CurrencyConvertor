@@ -7,7 +7,6 @@ import SwiftUI
 
 struct ContentView: View {
     // MARK: - PROPERTIES
-    @Binding var hasSeenOnboarding: Bool
     @StateObject private var viewModel = ContentViewModel()
     @State private var amount = ""
     @FocusState private var baseAmountIsFocused: Bool
