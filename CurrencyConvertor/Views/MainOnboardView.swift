@@ -11,7 +11,7 @@ struct MainOnboardView: View {
     
     // MARK: - PROPERTIES
     @State private var currentPage = 0
-    @State private var navigateToHome = false
+    @State private var navigateToSignin = false
     
     // MARK: - BODY
     var body: some View {
@@ -46,9 +46,9 @@ struct MainOnboardView: View {
                 
                 // Continue Button
                 if currentPage == 2 {
-                    Button(action: {
-                        navigateToHome = true
-                    }) {
+                    Button {
+                        navigateToSignin = true
+                    } label: {
                         Text("Continue")
                             .foregroundColor(.white)
                             .padding()
@@ -61,12 +61,13 @@ struct MainOnboardView: View {
                     .transition(.opacity)
                     .animation(.easeInOut, value: currentPage)
                 }
-
+            }
+            .navigationDestination(isPresented: $navigateToSignin) {
+                Signin()
             }
         }
     }
 }
-
 
 #Preview {
     MainOnboardView()

@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct HomeView: View {
     // MARK: - PROPERTIES
     @StateObject private var viewModel = ContentViewModel()
     @State private var amount = ""
@@ -254,6 +254,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }
 
